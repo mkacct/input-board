@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="robots" content="none">
+		<title>Input Board (Offline)</title>
+		<!-- favicons -->
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-96x96.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+		<!-- pwa/mobile -->
+		<link rel="manifest" href="/manifest.webmanifest">
+		<meta name="theme-color" content="#2196f3">
+		<!-- apple -->
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="apple-mobile-web-app-title" content="Input Board">
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+		<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#2196f3">
+		<!-- microsoft -->
+		<meta name="msapplication-TileColor" content="#2d89ef">
+	</head>
+	<body>
+		<div class="modal">
+			<div class="modalContent">
+				<h2 style="margin-top: 0;">You are offline</h2>
+				<p>Please connect to the internet</p>
+				<button onclick="window.location = 'index.html';">Retry</button>
+			</div>
+		</div>
+	</body>
+</html>
+<style>
+/* all css required for offline.html */
+
+html {overscroll-behavior: contain;}
+
+body {
+	font-family: 'Roboto', sans-serif;
+	margin: 0;
+	background-color: #181818;
+	color: white;
+	touch-action: manipulation;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-touch-callout: none;
+	overscroll-behavior: contain;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+@media all and (display-mode: standalone) {
+	body {touch-action: pan-x pan-y;}
+}
+
+@media screen and (min-width: 481px) {
+	.modalContent {margin: 0 10%;}
+}
+
+@media screen and (min-width: 1024px) {
+	.modalContent {margin: 0 25%;}
+}
+
+.modal {
+	position: fixed;
+	top: 50%;
+	width: 100%;
+	transform: translate(0, -50%);
+	z-index: 3;
+	background-color: #282828;
+	max-height: 100%;
+	overflow: auto;
+}
+
+.modalContent {padding: 2em 1em;}
+
+button {
+	background-color: transparent;
+	border: none;
+	outline: none;
+	color: inherit;
+	font: inherit;
+	padding: 0.5em 1em;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	border-radius: 1em;
+	transition: background-color 0.25s;
+}
+
+button:not([disabled]) {cursor: pointer;}
+button[disabled] {color: gray;}
+button:focus {outline: none;} /* for firefox */
+
+button:focus {background-color: rgba(255, 255, 255, 0.15);}
+
+@media only screen and (prefers-color-scheme: light) {
+	body {
+		color: black;
+		background-color: #d7d7d7;
+	}
+	
+	button {border-color: rgba(0, 0, 0, 0.3);}
+	
+	button[disabled] {color: #b8b8b8;}
+	button:focus {background-color: rgba(0, 0, 0, 0.15);}
+	
+	.modal {background-color: #e7e7e7;}
+	
+	h2 {color: #383838;}
+}
+</style>
