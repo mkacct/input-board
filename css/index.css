@@ -1,0 +1,11 @@
+.centeredDot {
+	margin: 0 auto;
+	width: 5px;
+	height: 5px;
+	background-color: dimgray;
+	border-radius: 50%;
+}
+
+@media only screen and (prefers-color-scheme: light) {
+	.centeredDot {background-color: #979797;}
+}
