@@ -15,7 +15,12 @@ h1 {
 	text-align: left;
 	width: 100%;
 	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
+
+#board button .fa-spinner {display: none;}
 
 #board button * {font-size: 1.2em;}
 

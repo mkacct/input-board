@@ -1,12 +1,14 @@
 'use strict';
 
 const tileColors = {
-	'red': 'red',
-	'orange': 'orange',
-	'yellow': 'yellow',
-	'green': 'green',
-	'blue': 'blue',
-	'purple': 'purple',
+	'red': '#e6261f',
+	'orange': '#eb7532',
+	'yellow': '#f7d038',
+	'lime': '#a3e048',
+	'green': '#49da9a',
+	'skyblue': '#34bbe6',
+	'blue': '#4355db',
+	'purple': '	#d23be7'
 }
 
 // begin pwa install stuff
@@ -42,7 +44,28 @@ function hideInstallOption2(installed) { // the part that may or may not occur a
 
 $(document).ready(function() {
 	// add events
-	// TODO: android back button
+	// android back button stuff
+	if (window.matchMedia('(display-mode: standalone)').matches && navigator.userAgent.toLowerCase().indexOf('android') > -1) {
+		if (window.history.scrollRestoration) {window.history.scrollRestoration = 'manual';}
+		
+		// to do history stuff (for android back button)
+		$(window).on('popstate', function(e) {
+			window.history.pushState({}, '');
+			if ($('.modal:visible').length > 0) {
+				closeModal();
+			} else {
+				//openModal('#closeAppModal');
+				toast('Use a different feature to leave the app', 3000);
+			}
+		});
+		window.history.pushState({}, '');
+		
+		/*
+		$('#closeAppButton').on('click', function(e) {
+			// somehow manage to close the app
+		});
+		*/
+	}
 	// to scroll to top by clicking the logo
 	$('#logoLink').on('click', function(e) {
 		if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -101,16 +124,22 @@ function loadBoard() {
 			arr.forEach(function(el) {
 				let button = $('<button></button>');
 				button.append($('<i class="fa-fw"></i>').addClass(el.icon).css('color', tileColors[el.color]));
+				button.append($('<i class="fa-fw fas fa-spinner fa-pulse"></i>'));
 				button.append($('<span></span>').text(el.name));
 				button.on('click', function(e) {
 					if (lsGet('iftttKey', '') != '') {
-						setButtonState(this, 'busy');
+						setButtonState(this, true);
 						let value;
 						if (typeof el.type == 'string') {
-							if (el.type == 'text') {
-								value = prompt('Enter text');
+							if (el.type == 'text') { // get text value
+								value = prompt(el.dialogText);
 								if (value == null) { // bail
-									setButtonState(this, 'default');
+									setButtonState(this, false);
+									return;
+								}
+							} else if (el.type == 'confirm') { // use confirmation
+								if (!confirm(el.dialogText)) {
+									setButtonState(this, false);
 									return;
 								}
 							}
@@ -124,7 +153,7 @@ function loadBoard() {
 			});
 			$('#board').append(els);
 		} else {
-			$('#board').html('<div class="suit" style="color: gray; text-align: center;">No content yet</div>');
+			$('#board').html('<div class="suit" style="color: gray; text-align: center;">Select the <i class="fas fa-pen"></i> button to add content</div>');
 		}
 		$('#board').fadeIn(animTime);
 	} else {
@@ -139,7 +168,7 @@ function saveBoard() {
 		closeModal();
 		loadBoard();
 	} else {
-		toast('JSON contains error', 2000);
+		toast('<i class="fas fa-exclamation-triangle"></i>Data is not valid', 2000);
 	}
 }
 
@@ -159,8 +188,9 @@ function validateBoard(json) {
 		if (typeof obj[i].type == 'string') {
 			if (obj[i].type == 'text') {
 				if ([1, 2, 3].indexOf(obj[i].valueNumber) < 0) {return false;}
-			} else {
-				return false;
+			}
+			if (obj[i].type == 'text' || obj[i].type == 'confirm') {
+				if (!(typeof obj[i].dialogText == 'string' && obj[i].dialogText.length > 0)) {return false;}
 			}
 		}
 	}
@@ -169,25 +199,28 @@ function validateBoard(json) {
 
 // validate ifttt key first
 function requestIfttt(eventName, value, valueNumber, buttonEl) {
-	let reqData = {value1: '', value2: '', value3: ''};
+	let reqData = {};
 	if (value) {reqData['value' + valueNumber] = value;}
 	$.ajax({
 		type: 'post',
 		url: 'https://maker.ifttt.com/trigger/' + eventName + '/with/key/' + lsGet('iftttKey', ''),
-		data: reqData
+		data: reqData,
+		timeout: 10000
+	}).fail(function(xhr, status, err) {
+		if (status == 'timeout') {toast('Request timed out', '2000');}
 	}).always(function() {
-		setButtonState(buttonEl, 'completed');
+		setButtonState(buttonEl, false);
 	});
 }
 
 function setButtonState(buttonEl, state) {
-	if (state == 'completed') {
-		$(buttonEl).attr('disabled', true);
-		setTimeout(function() {setButtonState(buttonEl, 'default');}, 1500)
-	} else if (state == 'busy') {
-		$(buttonEl).attr('disabled', true);
+	$(buttonEl).attr('disabled', state);
+	if (state) {
+		$(buttonEl).children('i:not(.fa-spinner)').hide();
+		$(buttonEl).children('i.fa-spinner').show().css('display', 'inline-block');
 	} else {
-		$(buttonEl).attr('disabled', false);
+		$(buttonEl).children('i.fa-spinner').hide();
+		$(buttonEl).children('i:not(.fa-spinner)').show().css('display', 'inline-block');
 	}
 }
 
