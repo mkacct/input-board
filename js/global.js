@@ -1,10 +1,12 @@
 'use strict';
 
+const lsAppId = 'ibl';
+
 $(document).ready(function() {
 	// tell desktop from mobile for hover
 	watchForHover();
 	// never keep buttons focused
-	$('button').on('click', function(e) {
+	$('body').on('click', 'button', function(e) {
 		$(this).blur();
 	});
 	// three ways to close a modal
@@ -92,7 +94,7 @@ function generateExpandLink(defaultText, shownText, containerSelector) {
 
 function lsGet(key, fallback) {
 	if (window.localStorage) {
-		let item = localStorage.getItem('ibl_' + key);
+		let item = localStorage.getItem(lsAppId + '_' + key);
 		if (typeof item == 'string') {
 			return item;
 		} else {
@@ -106,7 +108,7 @@ function lsGet(key, fallback) {
 
 function lsSet(key, value) {
 	if (window.localStorage) {
-		localStorage.setItem('ibl_' + key, value.toString());
+		localStorage.setItem(lsAppId + '_' + key, value.toString());
 	} else {
 		console.log('lsSet failed because localStorage is not available');
 	}

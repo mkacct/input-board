@@ -1,3 +1,42 @@
+h1 {
+	margin-left: 16px;
+	margin-right: 16px;
+	text-align: center;
+}
+
+#board {
+	display: none;
+	margin: 1em;
+}
+
+#board button {
+	padding: 1em 1.5em;
+	border-radius: 16px;
+	text-align: left;
+	width: 100%;
+	display: block;
+}
+
+#board button * {font-size: 1.2em;}
+
+#board button:not(:last-child) {margin-bottom: 1em;}
+
+.suit {
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+#editor {
+	display: block;
+	font-family: 'Roboto Mono', monospace;
+	box-sizing: border-box;
+	width: 100%;
+	margin-bottom: 1em;
+	resize: vertical;
+}
+
 .centeredDot {
 	margin: 0 auto;
 	width: 5px;
