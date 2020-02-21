@@ -6,7 +6,7 @@
 	"display": "standalone",
 	"scope": "/",
 	"start_url": "/index.html",
-	"categories": ["productivity", "utilities", "lifestyle"],
+	"categories": ["productivity", "utilities"],
 	"background_color": "#181818",
 	"theme_color": "#2196f3",
 	"icons": [
