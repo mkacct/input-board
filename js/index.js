@@ -158,7 +158,7 @@ function loadView(name) {
 		if (els.length > 0) {
 			$('#menuView').append(els);
 		} else {
-			$('#menuView').html('<div class="nothingMessage">This view is empty</div>');
+			$('#menuView').html('<div class="nothingMessage" style="margin-bottom: 1em;">This view is empty</div>');
 		}
 		openModal('#menuViewModal');
 	} else {
