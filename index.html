@@ -47,9 +47,18 @@
 		<main class="pageContent">
 			<h1>Input Board</h1>
 			<noscript><div class="suit" style="margin: 0 1em; text-align: center;">Please enable JavaScript and reload</div></noscript>
-			<div id="board"></div>
+			<div class="view" id="board"></div>
 		</main>
 		<div id="modalShade"></div>
+		<div class="modal" id="menuViewModal">
+			<div class="modalContent">
+				<div class="modalNav">
+					<button class="modalClose roundButton" aria-label="Close"><i class="fas fa-times"></i></button>
+				</div>
+				<h3 id="menuViewTitle"></h3>
+				<div class="view" id="menuView"></div>
+			</div>
+		</div>
 		<div class="modal" id="editModal">
 			<div class="modalContent">
 				<div class="modalNav">
@@ -57,7 +66,7 @@
 				</div>
 				<h3>Edit</h3>
 				<p class="suit">Paste your JSON here. It is recommended that you edit and save your data externally.</p>
-				<textarea id="editor" rows=10 autocomplete="off" spellcheck="false" wrap="off">[]</textarea>
+				<textarea id="editor" rows=10 autocomplete="off" spellcheck="false" wrap="off"></textarea>
 				<button id="saveButton" style="margin-bottom: 1em;">Save</button>
 			</div>
 		</div>
@@ -71,13 +80,17 @@
 					<p id="iftttKey">Not set</p>
 					<button id="setIftttKeyButton">Change key</button>
 				</div>
-				<div class="menuCategory" style="margin-bottom: 1em;">
+				<div class="menuCategory">
 					<h3>Links</h3>
 					<ul>
 						<li><a href="https://github.com/savaka2/input-board-lite" target="_blank" rel="noopener noreferrer">GitHub repo</a></li>
 						<li><a href="https://github.com/savaka2/input-board-lite/wiki" target="_blank" rel="noopener noreferrer">GitHub wiki</a></li>
 						<li><a href="https://github.com/savaka2/input-board-lite/issues" target="_blank" rel="noopener noreferrer">GitHub issues</a></li>
 					</ul>
+				</div>
+				<div class="menuCategory" style="margin-bottom: 1em;">
+					<h3>Icon credit</h3>
+					<p>App icon is a derivative of icon by Font Awesome, used under the <a href="https://fontawesome.com/license/free" target="_blank" rel="noopener noreferrer">Font Awesome Free License</a></p>
 				</div>
 				<div class="centeredDot" style="margin-top: 1em;"></div>
 				<img src="res/cred.png" id="cred" style="display: block; margin: 1em auto; width: 2em;" alt="Credit icon">

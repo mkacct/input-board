@@ -1,15 +1,7 @@
 'use strict';
 
-const tileColors = {
-	'red': '#e6261f',
-	'orange': '#eb7532',
-	'yellow': '#f7d038',
-	'lime': '#a3e048',
-	'green': '#49da9a',
-	'skyblue': '#34bbe6',
-	'blue': '#4355db',
-	'purple': '	#d23be7'
-}
+const tileColors = ['default', 'red', 'orange', 'yellow', 'lime', 'teal', 'skyblue', 'blue', 'purple'];
+const defaultBoard = '{\n\t"Main": []\n}';
 
 // begin pwa install stuff
 
@@ -89,7 +81,7 @@ $(document).ready(function() {
 	});
 	// to open the edit modal
 	$('#editButton').on('click', function(e) {
-		$('#editor').val(lsGet('board', '[]'));
+		$('#editor').val(lsGet('board', defaultBoard));
 		openModal('#editModal');
 	});
 	// to save edits
@@ -117,51 +109,75 @@ $(document).ready(function() {
 	loadBoard();
 });
 
+function useButton(el, buttonEl) {
+	if (el.type == 'menu') {
+		loadView(el.viewName);
+	} else if (lsGet('iftttKey', '') != '') {
+		setButtonState(buttonEl, true);
+		let value;
+		if (el.type == 'text') { // get text value
+			value = prompt(el.dialogText);
+			if (value == null) { // bail
+				setButtonState(buttonEl, false);
+				return;
+			}
+		} else if (el.type == 'confirm') { // use confirmation
+			if (!confirm(el.dialogText)) {
+				setButtonState(buttonEl, false);
+				return;
+			}
+		}
+		requestIfttt(el.eventName, value, el.valueNumber, buttonEl);
+	} else {
+		if (confirm('You need to set your IFTTT Webhooks key first. Open menu now?')) {openModal('#menuModal');}
+	}
+}
+
 function loadBoard() {
 	$('#board').hide().empty();
-	let json = lsGet('board', '[]');
+	let json = lsGet('board', defaultBoard);
 	if (validateBoard(json)) {
-		let arr = JSON.parse(json);
-		if (arr.length > 0) {
-			let els = [];
-			arr.forEach(function(el) {
-				let button = $('<button></button>');
-				button.append($('<i class="fa-fw"></i>').addClass(el.icon).css('color', tileColors[el.color]));
-				button.append($('<i class="fa-fw fas fa-spinner fa-pulse"></i>'));
-				button.append($('<span></span>').text(el.name));
-				button.on('click', function(e) {
-					if (lsGet('iftttKey', '') != '') {
-						setButtonState(this, true);
-						let value;
-						if (typeof el.type == 'string') {
-							if (el.type == 'text') { // get text value
-								value = prompt(el.dialogText);
-								if (value == null) { // bail
-									setButtonState(this, false);
-									return;
-								}
-							} else if (el.type == 'confirm') { // use confirmation
-								if (!confirm(el.dialogText)) {
-									setButtonState(this, false);
-									return;
-								}
-							}
-						}
-						requestIfttt(el.eventName, value, el.valueNumber, this);
-					} else {
-						if (confirm('You need to set your IFTTT Webhooks key first. Open menu now?')) {openModal('#menuModal');}
-					}
-				});
-				els.push(button);
-			});
+		let els = generateView(JSON.parse(json).Main);
+		if (els.length > 0) {
 			$('#board').append(els);
 		} else {
-			$('#board').html('<div class="suit" style="color: gray; text-align: center;">Select the <i class="fas fa-pen"></i> button to add content</div>');
+			$('#board').html('<div class="nothingMessage">Select the <i class="fas fa-pen"></i> button to add content</div>');
 		}
-		$('#board').fadeIn(animTime);
 	} else {
-		throw 'you let them save invalid data?!';
+		$('#board').html('<div class="nothingMessage">Your configuration is invalid. Select the <i class="fas fa-pen"></i> button to edit it.</div>');
 	}
+	$('#board').fadeIn(animTime);
+}
+
+function loadView(name) {
+	$('#menuView').empty();
+	let json = lsGet('board', defaultBoard);
+	if (validateBoard(json)) {
+		$('#menuViewTitle').text(name);
+		let els = generateView(JSON.parse(json)[name]);
+		if (els.length > 0) {
+			$('#menuView').append(els);
+		} else {
+			$('#menuView').html('<div class="nothingMessage">This view is empty</div>');
+		}
+		openModal('#menuViewModal');
+	} else {
+		toast('Your configuration is invalid', 2000);
+	}
+}
+
+function generateView(arr) {
+	let els = [];
+	arr.forEach(function(el, i) {
+		let button = $('<button></button>');
+		if (i % 2 == 0) {button.addClass('even');}
+		button.append($('<i class="fa-fw"></i>').addClass(el.icon).addClass('tileColor-' + el.color));
+		button.append($('<i class="fa-fw fas fa-spinner fa-pulse"></i>'));
+		button.append($('<span></span>').text(el.name));
+		button.on('click', function(e) {useButton(el, this);});
+		els.push(button);
+	});
+	return els;
 }
 
 function saveBoard() {
@@ -182,18 +198,26 @@ function validateBoard(json) {
 	} catch (err) {
 		return false;
 	}
-	if (!Array.isArray(obj)) {return false;}
-	for (let i in obj) {
-		if (!(typeof obj[i].name == 'string' && obj[i].name.length > 0)) {return false;}
-		if (!(typeof obj[i].icon == 'string' && obj[i].icon.length > 0)) {return false;}
-		if (!(typeof obj[i].color == 'string' && typeof tileColors[obj[i].color] == 'string')) {return false;}
-		if (!(typeof obj[i].eventName == 'string' && obj[i].eventName.length > 0)) {return false;}
-		if (typeof obj[i].type == 'string') {
-			if (obj[i].type == 'text') {
-				if ([1, 2, 3].indexOf(obj[i].valueNumber) < 0) {return false;}
+	if (!Array.isArray(obj.Main)) {return false;}
+	for (let key in obj) {
+		if (!Array.isArray(obj[key])) {return false;}
+		for (let i in obj[key]) {
+			let temp = obj[key][i];
+			if (!(typeof temp.name == 'string' && temp.name.length > 0)) {return false;}
+			if (!(typeof temp.icon == 'string' && temp.icon.length > 0)) {return false;}
+			if (tileColors.indexOf(temp.color) < 0) {return false;}
+			if (temp.type != 'menu') {
+				if (!(typeof temp.eventName == 'string' && temp.eventName.length > 0)) {return false;}
 			}
-			if (obj[i].type == 'text' || obj[i].type == 'confirm') {
-				if (!(typeof obj[i].dialogText == 'string' && obj[i].dialogText.length > 0)) {return false;}
+			if (temp.type == 'text') {
+				if ([1, 2, 3].indexOf(temp.valueNumber) < 0) {return false;}
+				if (!(typeof temp.dialogText == 'string' && temp.dialogText.length > 0)) {return false;}
+			} else if (temp.type == 'confirm') {
+				if (!(typeof temp.dialogText == 'string' && temp.dialogText.length > 0)) {return false;}
+			} else if (temp.type == 'menu') {
+				if (!(key == 'Main' && typeof temp.viewName == 'string' && temp.viewName.length > 0 && temp.viewName != 'Main' && obj[temp.viewName])) {return false;}
+			} else if (temp.type != 'basic') {
+				return false;
 			}
 		}
 	}

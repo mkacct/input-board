@@ -1,6 +1,6 @@
 {
 	"name": "Input Board",
-	
+	"description": "Trigger IFTTT applets from your browser",
 	"dir": "ltr",
 	"lang": "en-US",
 	"display": "standalone",

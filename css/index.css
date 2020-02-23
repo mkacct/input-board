@@ -6,31 +6,33 @@ h1 {
 
 #board {
 	display: none;
-	margin: 1em;
+	margin: 1em 1em 0;
 }
 
-#board button {
+.view button {
 	padding: 1em 1.5em;
 	border-radius: 16px;
 	text-align: left;
 	width: 100%;
-	display: block;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	margin-bottom: 1em;
 }
 
-#board button .fa-spinner {display: none;}
+.view button .fa-spinner {display: none;}
+.view button * {font-size: 1.2em;}
 
-#board button * {font-size: 1.2em;}
-
-#board button:not(:last-child) {margin-bottom: 1em;}
-
-.suit {
+.suit, .nothingMessage {
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+}
+
+.nothingMessage {
+	color: gray;
+	text-align: center;
 }
 
 #editor {
@@ -52,6 +54,20 @@ h1 {
 	height: 5px;
 	background-color: dimgray;
 	border-radius: 50%;
+}
+
+.tileColor-red {color: #e6261f}
+.tileColor-orange {color: #eb7532}
+.tileColor-yellow {color: #f7d038}
+.tileColor-lime {color: #a3e048}
+.tileColor-teal {color: #49da9a}
+.tileColor-skyblue {color: #34bbe6}
+.tileColor-blue {color: #4355db}
+.tileColor-purple {color: #d23be7}
+
+@media screen and (min-width: 481px) {
+	.view button {width: calc(50% - 0.5em)}
+	.view button.even {margin-right: 1em;}
 }
 
 @media only screen and (prefers-color-scheme: light) {
