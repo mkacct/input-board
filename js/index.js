@@ -172,7 +172,7 @@ function generateView(arr) {
 	arr.forEach(function(el) {
 		if (typeof el == 'string') {
 			even = false;
-			els.push($('<h2></h2>').text(el));
+			els.push($('<h2></h2>').text(el == '' ? '\u200c' : el));
 		} else {
 			even = !even;
 			let button = $('<button></button>');
@@ -210,7 +210,7 @@ function validateBoard(json) {
 		if (!Array.isArray(obj[key])) {return false;}
 		for (let i in obj[key]) {
 			let temp = obj[key][i];
-			if (typeof temp != 'string') {
+			if (!(typeof temp == 'string' && key == 'Main')) {
 				if (!(typeof temp.name == 'string' && temp.name.length > 0)) {return false;}
 				if (!(typeof temp.icon == 'string' && temp.icon.length > 0)) {return false;}
 				if (tileColors.indexOf(temp.color) < 0) {return false;}
