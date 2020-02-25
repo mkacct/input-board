@@ -116,7 +116,6 @@ function useButton(el, buttonEl) {
 		setButtonState(buttonEl, true);
 		let value;
 		if (el.type == 'text') { // get text value
-			let value;
 			let isValid = false;
 			while (!isValid) {
 				value = prompt(el.dialogText);
