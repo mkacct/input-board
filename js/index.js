@@ -116,10 +116,15 @@ function useButton(el, buttonEl) {
 		setButtonState(buttonEl, true);
 		let value;
 		if (el.type == 'text') { // get text value
-			value = prompt(el.dialogText);
-			if (value == null) { // bail
-				setButtonState(buttonEl, false);
-				return;
+			let value;
+			let isValid = false;
+			while (!isValid) {
+				value = prompt(el.dialogText);
+				if (value == null) { // bail
+					setButtonState(buttonEl, false);
+					return;
+				}
+				if (!el.validation || value.match(new RegExp(el.validation))) {isValid = true;}
 			}
 		} else if (el.type == 'confirm') { // use confirmation
 			if (!confirm(el.dialogText)) {
@@ -220,6 +225,14 @@ function validateBoard(json) {
 				if (temp.type == 'text') {
 					if ([1, 2, 3].indexOf(temp.valueNumber) < 0) {return false;}
 					if (!(typeof temp.dialogText == 'string' && temp.dialogText.length > 0)) {return false;}
+					if (temp.validation) {
+						if (typeof temp.validation != 'string') {return false;}
+						try {
+							new RegExp(temp.validation);
+						} catch (err) {
+							return false;
+						}
+					}
 				} else if (temp.type == 'confirm') {
 					if (!(typeof temp.dialogText == 'string' && temp.dialogText.length > 0)) {return false;}
 				} else if (temp.type == 'menu') {
