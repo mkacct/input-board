@@ -35,6 +35,9 @@ h1 {
 	text-align: center;
 }
 
+hr {border: 1px solid gray;}
+.view hr {margin-bottom: 1.5em;}
+
 #editor {
 	display: block;
 	font-family: 'Roboto Mono', monospace;

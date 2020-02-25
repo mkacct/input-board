@@ -168,14 +168,21 @@ function loadView(name) {
 
 function generateView(arr) {
 	let els = [];
-	arr.forEach(function(el, i) {
-		let button = $('<button></button>');
-		if (i % 2 == 0) {button.addClass('even');}
-		button.append($('<i class="fa-fw"></i>').addClass(el.icon).addClass('tileColor-' + el.color));
-		button.append($('<i class="fa-fw fas fa-spinner fa-pulse"></i>'));
-		button.append($('<span></span>').text(el.name));
-		button.on('click', function(e) {useButton(el, this);});
-		els.push(button);
+	let even = false;
+	arr.forEach(function(el) {
+		if (el == '-') {
+			even = false;
+			els.push($('<hr>'));
+		} else {
+			even = !even;
+			let button = $('<button></button>');
+			if (even) {button.addClass('even');}
+			button.append($('<i class="fa-fw"></i>').addClass(el.icon).addClass('tileColor-' + el.color));
+			button.append($('<i class="fa-fw fas fa-spinner fa-pulse"></i>'));
+			button.append($('<span></span>').text(el.name));
+			button.on('click', function(e) {useButton(el, this);});
+			els.push(button);
+		}
 	});
 	return els;
 }
@@ -203,21 +210,23 @@ function validateBoard(json) {
 		if (!Array.isArray(obj[key])) {return false;}
 		for (let i in obj[key]) {
 			let temp = obj[key][i];
-			if (!(typeof temp.name == 'string' && temp.name.length > 0)) {return false;}
-			if (!(typeof temp.icon == 'string' && temp.icon.length > 0)) {return false;}
-			if (tileColors.indexOf(temp.color) < 0) {return false;}
-			if (temp.type != 'menu') {
-				if (!(typeof temp.eventName == 'string' && temp.eventName.length > 0)) {return false;}
-			}
-			if (temp.type == 'text') {
-				if ([1, 2, 3].indexOf(temp.valueNumber) < 0) {return false;}
-				if (!(typeof temp.dialogText == 'string' && temp.dialogText.length > 0)) {return false;}
-			} else if (temp.type == 'confirm') {
-				if (!(typeof temp.dialogText == 'string' && temp.dialogText.length > 0)) {return false;}
-			} else if (temp.type == 'menu') {
-				if (!(key == 'Main' && typeof temp.viewName == 'string' && temp.viewName.length > 0 && temp.viewName != 'Main' && obj[temp.viewName])) {return false;}
-			} else if (temp.type != 'basic') {
-				return false;
+			if (temp != '-') {
+				if (!(typeof temp.name == 'string' && temp.name.length > 0)) {return false;}
+				if (!(typeof temp.icon == 'string' && temp.icon.length > 0)) {return false;}
+				if (tileColors.indexOf(temp.color) < 0) {return false;}
+				if (temp.type != 'menu') {
+					if (!(typeof temp.eventName == 'string' && temp.eventName.length > 0)) {return false;}
+				}
+				if (temp.type == 'text') {
+					if ([1, 2, 3].indexOf(temp.valueNumber) < 0) {return false;}
+					if (!(typeof temp.dialogText == 'string' && temp.dialogText.length > 0)) {return false;}
+				} else if (temp.type == 'confirm') {
+					if (!(typeof temp.dialogText == 'string' && temp.dialogText.length > 0)) {return false;}
+				} else if (temp.type == 'menu') {
+					if (!(key == 'Main' && typeof temp.viewName == 'string' && temp.viewName.length > 0 && temp.viewName != 'Main' && obj[temp.viewName])) {return false;}
+				} else if (temp.type != 'basic') {
+					return false;
+				}
 			}
 		}
 	}
