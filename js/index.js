@@ -170,9 +170,9 @@ function generateView(arr) {
 	let els = [];
 	let even = false;
 	arr.forEach(function(el) {
-		if (el == '-') {
+		if (typeof el == 'string') {
 			even = false;
-			els.push($('<hr>'));
+			els.push($('<h2></h2>').text(el));
 		} else {
 			even = !even;
 			let button = $('<button></button>');
@@ -210,7 +210,7 @@ function validateBoard(json) {
 		if (!Array.isArray(obj[key])) {return false;}
 		for (let i in obj[key]) {
 			let temp = obj[key][i];
-			if (temp != '-') {
+			if (typeof temp != 'string') {
 				if (!(typeof temp.name == 'string' && temp.name.length > 0)) {return false;}
 				if (!(typeof temp.icon == 'string' && temp.icon.length > 0)) {return false;}
 				if (tileColors.indexOf(temp.color) < 0) {return false;}

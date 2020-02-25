@@ -22,6 +22,7 @@ h1 {
 
 .view button .fa-spinner {display: none;}
 .view button * {font-size: 1.2em;}
+.view h2 {font-size: 1.2em;}
 
 .suit, .nothingMessage {
 	-moz-user-select: none;
@@ -34,9 +35,6 @@ h1 {
 	color: gray;
 	text-align: center;
 }
-
-hr {border: 1px solid gray;}
-.view hr {margin-bottom: 1.5em;}
 
 #editor {
 	display: block;
