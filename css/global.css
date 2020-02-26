@@ -159,18 +159,21 @@ input[type=text], textarea {
 	min-width: 0;
 	transition: border-color 0.25s;
 }
+
 input[type=text] {
 	padding: 0.5em 0;
 	background-color: inherit;
 	border: none;
 	border-bottom: 1px solid white;
 }
+
 textarea {
 	padding: 0.5em;
 	background-color: #282828;
 	border: 1px solid white;
 	resize: none;
 }
+
 textarea[readonly] {background-color: inherit;}
 input[type=text]:focus, textarea:focus {border-color: #2196f3;}
 
