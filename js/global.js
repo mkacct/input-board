@@ -139,8 +139,6 @@ function splitVer(ver) {
 	return verArr;
 }
 
-function randomInt(min, max) {
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+function randomInt(min, max) {return Math.floor(Math.random() * (max - min + 1)) + min;}
 
 function asBoolean(string) {return string.toLowerCase() == 'true';}
