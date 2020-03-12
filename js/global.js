@@ -1,7 +1,5 @@
 'use strict';
 
-const lsAppId = 'ibl';
-
 $(document).ready(function() {
 	// tell desktop from mobile for hover
 	watchForHover();
