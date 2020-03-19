@@ -87,7 +87,7 @@ $(document).ready(function() {
 	// to save edits
 	$('#saveButton').on('click', saveBoard);
 	$('#editor').on('keydown', function(e) {
-		if (e.ctrlKey && e.keyCode == 13) {saveBoard();}
+		if (e.ctrlKey && e.key == 'Enter') {saveBoard();}
 	});
 	// to open the menu modal
 	$('#menuButton').on('click', function(e) {
